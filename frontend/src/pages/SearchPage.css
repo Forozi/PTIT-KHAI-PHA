@@ -1,0 +1,114 @@
+.search-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.search-section {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 8px;
+    min-height: 40px;
+}
+
+.selected-tag {
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.remove-tag-btn {
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.tag-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    padding: 5px;
+}
+
+.autocomplete-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    position: absolute;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+    border-radius: 5px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.autocomplete-item {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.autocomplete-item:hover {
+    background: #f0f0f0;
+}
+
+.search-button {
+    padding: 12px 25px;
+    width: 100%;
+    cursor: pointer;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.search-button:disabled {
+    background-color: #8ed69e;
+    cursor: not-allowed;
+}
+
+.results-section {
+    margin-top: 30px;
+}
+
+.recipe-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.recipe-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: white;
+}
+
+.recipe-card:hover {
+    background-color: #f9f9f9;
+}
+
+.recipe-title {
+    margin: 0 0 10px 0;
+}
