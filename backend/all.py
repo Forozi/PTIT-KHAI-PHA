@@ -211,7 +211,8 @@ def search_recipes_by_tags(user_tags, dataframe):
                 'matched_tags': list(user_set),
                 'missing_tags': missing_tags,
                 'message': message,
-                'url': row.get('url', 'N/A')
+                'url': row.get('url', 'N/A'),
+                'img_src': row.get('img_src', '')
             })
     
     ranked_matches = sorted(matches, key=lambda x: x['total_ingredients_count'])

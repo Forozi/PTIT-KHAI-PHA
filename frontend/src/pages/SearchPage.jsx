@@ -3,9 +3,16 @@ import { Link } from 'react-router-dom'; // Import Link for navigation
 import './SearchPage.css';
 
 function SearchPage() {
+    // Initialize state from localStorage if available
     const [inputValue, setInputValue] = useState("");
-    const [selectedTags, setSelectedTags] = useState([]);
-    const [recipes, setRecipes] = useState([]);
+    const [selectedTags, setSelectedTags] = useState(() => {
+        const saved = localStorage.getItem("selectedTags");
+        return saved ? JSON.parse(saved) : [];
+    });
+    const [recipes, setRecipes] = useState(() => {
+        const saved = localStorage.getItem("searchResults");
+        return saved ? JSON.parse(saved) : [];
+    });
     const [availableTags, setAvailableTags] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -21,7 +28,17 @@ function SearchPage() {
             }
         };
         fetchTags();
-    }, []); // Empty dependency array ensures this runs only once
+    }, []); 
+
+    // Save selected tags to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem("selectedTags", JSON.stringify(selectedTags));
+    }, [selectedTags]);
+
+    // Save search results to localStorage whenever they change
+    useEffect(() => {
+        localStorage.setItem("searchResults", JSON.stringify(recipes));
+    }, [recipes]);
 
     // Filter available ingredients based on user input
     const filteredTags = availableTags.filter(tag =>
@@ -65,6 +82,22 @@ function SearchPage() {
         }
     };
 
+    const handleImpressMe = async () => {
+        setIsLoading(true);
+        setRecipes([]);
+        try {
+            const response = await fetch('http://localhost:5000/api/random');
+            const data = await response.json();
+            if (data.status === "success") {
+                setRecipes(data.recipes);
+            }
+        } catch (error) {
+            console.error("Error fetching random recipes:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="search-page">
             <h1>Ingredient-Based Recipe Finder</h1>
@@ -99,26 +132,43 @@ function SearchPage() {
                 )}
             </div>
 
-            <button onClick={handleSearch} disabled={isLoading} className="search-button">
-                {isLoading ? 'Searching...' : 'Find Recipes'}
-            </button>
+            <div className="search-buttons-container">
+                <button onClick={handleSearch} disabled={isLoading || selectedTags.length === 0} className="search-button">
+                    {isLoading ? 'Searching...' : 'Find Recipes'}
+                </button>
+                <button onClick={handleImpressMe} disabled={isLoading} className="impress-button">
+                    {isLoading ? 'Wait...' : 'Impress Me'}
+                </button>
+            </div>
 
             {/* Results Area */}
             <div className="results-section">
-                <h2>Results</h2>
+                <h2>Suggested Recipes</h2>
                 {recipes.length > 0 ? recipes.map((recipe) => (
-                    // Using Link to navigate to the detailed recipe page
                     <Link to={`/recipe/${recipe.recipe_id}`} key={recipe.recipe_id} className="recipe-link">
                         <div className="recipe-card">
-                            <h3 className="recipe-title">{recipe.recipe_name}</h3>
-                            <p style={{ color: recipe.missing_tags.length === 0 ? "green" : "#d9534f" }}>
-                                <strong>Status:</strong> {recipe.message}
-                            </p>
-                            <p><strong>Your Ingredients:</strong> {recipe.ingredients_full.filter(ing => !recipe.missing_tags.includes(ing)).join(', ')}</p>
+                            <div className="recipe-card-image-box">
+                                {recipe.img_src ? (
+                                    <img src={recipe.img_src} alt={recipe.recipe_name} className="recipe-card-img" />
+                                ) : (
+                                    <div className="recipe-card-img-placeholder">No Image</div>
+                                )}
+                            </div>
+                            <div className="recipe-card-text">
+                                <h3 className="recipe-title">{recipe.recipe_name}</h3>
+                                <div className="recipe-item-status" style={{ color: recipe.missing_tags.length === 0 ? "var(--moss-green)" : "var(--oxblood)" }}>
+                                    <strong>Status:</strong> {recipe.message}
+                                </div>
+                                <p className="recipe-ingredients-summary">
+                                    <strong>Available:</strong> {recipe.ingredients_full.filter(ing => !recipe.missing_tags.includes(ing)).join(', ')}
+                                </p>
+                            </div>
                         </div>
                     </Link>
-                )) : <p>No recipes found yet. Add ingredients and click search!</p>}
+                )) : <p className="no-results">No recipes found yet. Add ingredients and click search!</p>}
+
             </div>
+
         </div>
     );
 }

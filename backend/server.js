@@ -66,6 +66,26 @@ app.get('/api/recipe/:id', (req, res) => {
     });
 });
 
+app.get('/api/random', (req, res) => {
+    const pythonProcess = spawn('python', ['data_api.py', 'random', '5']);
+    let dataString = '';
+    pythonProcess.stdout.on('data', (data) => {
+        dataString += data.toString();
+    });
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Python Error (random): ${data}`);
+    });
+    pythonProcess.on('close', (code) => {
+        try {
+            const result = JSON.parse(dataString);
+            res.json(result);
+        } catch (error) {
+            res.status(500).json({ error: "Failed to fetch random recipes" });
+        }
+    });
+});
+
+
 app.post('/api/search', (req, res) => {
     // ... (This function remains unchanged)
     const { tags } = req.body;

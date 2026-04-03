@@ -52,6 +52,38 @@ def handle_search(user_tags):
         "recipes": results[:20]
     }))
 
+def handle_random(count_str):
+    try:
+        count = int(count_str)
+    except ValueError:
+        count = 5
+        
+    # Get random sample
+    sample = df.sample(n=min(count, len(df)))
+    
+    results = []
+    for idx, row in sample.sample(frac=1).iterrows(): # Random order in the sample
+        results.append({
+            'recipe_id': int(idx),
+            'recipe_name': row['recipe_name'],
+            'total_ingredients_count': len(row.get('ingredients_list', [])),
+            'ingredients_full': row.get('ingredients_list', []),
+            'matched_tags': [],
+            'missing_tags': [],
+            'message': "A random inspiration just for you!",
+            'url': row.get('url', 'N/A'),
+            'img_src': row.get('img_src', '')
+        })
+
+
+    sys.stdout.reconfigure(encoding='utf-8')
+    print(json.dumps({
+        "status": "success",
+        "results_count": len(results),
+        "recipes": results
+    }))
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print(json.dumps({"error": "No action specified"}))
@@ -68,5 +100,7 @@ if __name__ == "__main__":
             handle_recipe(sys.argv[2])
     elif action == "search":
         handle_search(sys.argv[2:])
+    elif action == "random":
+        handle_random(sys.argv[2] if len(sys.argv) > 2 else "5")
     else:
         print(json.dumps({"error": f"Unknown action: {action}"}))

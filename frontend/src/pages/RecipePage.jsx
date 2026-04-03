@@ -44,27 +44,42 @@ function RecipePage() {
         return <div className="recipe-page"><p>No recipe data available.</p></div>;
     }
 
+    const getStarStyle = (rating) => {
+        if (!rating) return "";
+        if (rating < 3.5) return "star-brown";
+        if (rating < 4.5) return "star-silver";
+        return "star-gold";
+    };
+
     return (
         <div className="recipe-page">
-            <Link to="/" className="back-link">&larr; Back to Search</Link>
-            <h1 className="recipe-main-title">{recipe.recipe_name}</h1>
+            <Link to="/" className="back-link">&larr; Return to Search</Link>
 
             <div className="recipe-header">
                 {recipe.img_src ? (
                     <img src={recipe.img_src} alt={recipe.recipe_name} className="recipe-image" />
                 ) : (
-                    <div className="recipe-image-placeholder">No Image</div>
+                    <div className="recipe-image-placeholder">No Image Available</div>
                 )}
                 <div className="recipe-meta">
-                    <p><strong>Rating:</strong> {recipe.rating || 'N/A'} / 5</p>
+                    <h1 className="recipe-main-title">{recipe.recipe_name}</h1>
+                    <p>
+
+                        <strong>Rating:</strong> {recipe.rating || 'N/A'} / 5
+                        <span className={`rating-star ${getStarStyle(recipe.rating)}`}>★</span>
+                    </p>
                     <p><strong>Servings:</strong> {recipe.servings || 'N/A'}</p>
-                    {recipe.url && <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="source-link">View Original Source</a>}
+                    {recipe.url && (
+                        <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="source-link">
+                            View Full Recipe Details
+                        </a>
+                    )}
                 </div>
             </div>
 
             <div className="recipe-columns">
                 <div className="ingredients-column">
-                    <h2>Ingredients</h2>
+                    <h2 className="section-label">Ingredients</h2>
                     <ul className="ingredients-list">
                         {recipe.ingredients_list && recipe.ingredients_list.map((item, index) => (
                             <li key={index}>{item}</li>
@@ -73,18 +88,28 @@ function RecipePage() {
                 </div>
 
                 <div className="directions-column">
-                    <h2>Directions</h2>
-                    {/* Splitting directions by newline for better formatting */}
-                    {recipe.directions ? recipe.directions.split('\n').map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                    )) : <p>No directions available.</p>}
+                    <h2 className="section-label">Directions</h2>
+                    <div className="directions-text">
+                        {recipe.directions ? recipe.directions.split('\n').map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                        )) : <p>No directions available.</p>}
+                    </div>
                 </div>
             </div>
 
-            <div className="nutrition-section">
-                <h2>Nutrition Facts</h2>
-                <p>{recipe.nutrition || "Not available"}</p>
-            </div>
+            {recipe.nutrition && (
+                <div className="nutrition-section">
+                    <h2 className="section-label">Nutrition</h2>
+                    <div className="nutrition-grid">
+                        {recipe.nutrition.split(',').map((item, index) => (
+                            <div key={index} className="nutrition-item">
+                                {item.trim()}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
