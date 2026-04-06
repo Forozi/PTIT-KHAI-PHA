@@ -4,7 +4,10 @@ from collections import Counter
 import os
 
 # I. CONSTANTS & MAPPINGS
-CACHE_FILE = "recipes_processed.pkl"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "..", "data")
+CACHE_FILE = os.path.join(DATA_DIR, "recipes_processed.pkl")
+CSV_FILE = os.path.join(DATA_DIR, "recipes.csv")
 
 ingredient_map = {
     'granny smith apples': 'apple', 'apples': 'apple', 'golden delicious apples':'apple',
@@ -150,10 +153,10 @@ def load_data():
         return pd.read_pickle(CACHE_FILE)
     
     # Load and process if cache doesn't exist
-    if not os.path.exists("recipes.csv"):
+    if not os.path.exists(CSV_FILE):
         return pd.DataFrame()
 
-    df = pd.read_csv("recipes.csv")
+    df = pd.read_csv(CSV_FILE)
     
     # Drop columns
     columns_to_drop = ['yield', 'prep_time', 'cook_time', 'total_time', 'timing', 'cuisine_path']

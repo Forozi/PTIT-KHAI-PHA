@@ -30,7 +30,7 @@ function RecipePage() {
         };
 
         fetchRecipeDetails();
-    }, [recipeId]); // Re-run effect if recipeId changes
+    }, [recipeId]);
 
     if (isLoading) {
         return <div className="recipe-page"><p>Loading recipe details...</p></div>;

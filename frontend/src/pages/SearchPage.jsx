@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom';
 import './SearchPage.css';
 
 function SearchPage() {
@@ -28,7 +28,7 @@ function SearchPage() {
             }
         };
         fetchTags();
-    }, []); 
+    }, []);
 
     // Save selected tags to localStorage whenever they change
     useEffect(() => {

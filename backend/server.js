@@ -6,12 +6,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// --- NEW CODE: Cache the available tags on server startup ---
 let availableTags = [];
 
 function loadTags() {
     console.log("Loading all available ingredient tags from Python...");
-    const pythonProcess = spawn('python', ['data_api.py', 'tags']);
+    const pythonProcess = spawn('python', ['utils/data_api.py', 'tags']);
     let tagData = '';
 
     pythonProcess.stdout.on('data', (data) => {
@@ -34,7 +33,7 @@ function loadTags() {
     });
 }
 
-// --- NEW ENDPOINT ---
+// API ENDPOINT
 app.get('/api/tags', (req, res) => {
     res.json(availableTags);
 });
@@ -45,7 +44,7 @@ app.get('/api/recipe/:id', (req, res) => {
         return res.status(400).json({ error: "No recipe ID provided" });
     }
 
-    const pythonProcess = spawn('python', ['data_api.py', 'recipe', id]);
+    const pythonProcess = spawn('python', ['utils/data_api.py', 'recipe', id]);
 
     let dataString = '';
     pythonProcess.stdout.on('data', (data) => {
@@ -67,7 +66,7 @@ app.get('/api/recipe/:id', (req, res) => {
 });
 
 app.get('/api/random', (req, res) => {
-    const pythonProcess = spawn('python', ['data_api.py', 'random', '5']);
+    const pythonProcess = spawn('python', ['utils/data_api.py', 'random', '5']);
     let dataString = '';
     pythonProcess.stdout.on('data', (data) => {
         dataString += data.toString();
@@ -87,14 +86,13 @@ app.get('/api/random', (req, res) => {
 
 
 app.post('/api/search', (req, res) => {
-    // ... (This function remains unchanged)
     const { tags } = req.body;
 
     if (!tags || tags.length === 0) {
         return res.status(400).json({ error: "No tags provided" });
     }
 
-    const pythonProcess = spawn('python', ['data_api.py', 'search', ...tags]);
+    const pythonProcess = spawn('python', ['utils/data_api.py', 'search', ...tags]);
 
     let dataString = '';
 
