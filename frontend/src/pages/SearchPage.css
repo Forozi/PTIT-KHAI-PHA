@@ -188,6 +188,196 @@
 }
 
 
+.search-page {
+    position: relative;
+    z-index: 1;
+}
+
+.search-section {
+    position: relative;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border: 1px solid var(--antique-gold);
+}
+
+.tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px inset var(--border-sep);
+    margin-bottom: 12px;
+    min-height: 50px;
+}
+
+.selected-tag {
+    background: var(--parchment-dark);
+    color: var(--ink-dark);
+    padding: 4px 12px;
+    border: 1px solid var(--antique-gold);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--heading-font);
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+}
+
+.remove-tag-btn {
+    border: none;
+    background: var(--oxblood);
+    color: var(--parchment-light);
+    cursor: pointer;
+    font-weight: bold;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 0;
+}
+
+.remove-tag-btn:hover {
+    background: #000;
+}
+
+.tag-input {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--body-font);
+}
+
+.autocomplete-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    border: 1px solid var(--antique-gold);
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    background: var(--parchment-light);
+    z-index: 1000;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.autocomplete-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-sep);
+    font-family: var(--body-font);
+    transition: background 0.2s;
+}
+
+.autocomplete-item:hover {
+    background: var(--parchment-base);
+    color: var(--oxblood);
+}
+
+.search-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.search-button {
+    padding: 15px 80px;
+    font-size: 1.4rem;
+    min-width: 350px;
+}
+
+.impress-button {
+    padding: 10px 40px;
+    font-size: 1rem;
+    min-width: 200px;
+    background: var(--moss-green);
+    opacity: 0.9;
+}
+
+.impress-button:hover:not(:disabled) {
+    background: #1e261f;
+    opacity: 1;
+}
+
+.results-section {
+    margin-top: 50px;
+}
+
+.recipe-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    margin-bottom: 25px;
+}
+
+.recipe-item-status {
+    font-family: var(--heading-font);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    padding: 5px 0;
+    border-bottom: 1px dotted var(--border-sep);
+}
+
+.recipe-card {
+    border: 1px solid var(--border-sep);
+    background-color: var(--parchment-light);
+    transition: all 0.3s ease;
+    display: flex; /* Side by side layout */
+    gap: 20px;
+    padding: 15px;
+    align-items: center; /* Vertical center alignment */
+}
+
+.recipe-card-image-box {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0; /* Prevent image box from shrinking */
+    border: 2px solid var(--antique-gold);
+    overflow: hidden;
+    background: var(--parchment-dark);
+}
+
+.recipe-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recipe-card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: var(--ink-dark);
+    font-family: var(--heading-font);
+}
+
+.recipe-card-text {
+    flex: 1; /* Take up remaining space */
+    text-align: left;
+}
+
+.recipe-card:hover {
+    background-color: #fffaf0;
+    transform: translateX(5px);
+    box-shadow: -5px 5px 15px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid var(--oxblood);
+}
+
+
 .recipe-title {
     margin: 0 0 15px 0;
     font-size: 1.8rem;
@@ -199,4 +389,22 @@
     font-style: italic;
     color: var(--moss-green);
     margin: 0;
-}
+}
+
+.recipe-meta-data {
+    font-family: var(--body-font);
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    color: var(--ink-dark);
+    gap: 5px;
+}
+
+.rating-star {
+    font-size: 1.4rem;
+}
+
+.star-brown { color: #8b4513; }
+.star-silver { color: #c0c0c0; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
+.star-gold { color: #ffd700; text-shadow: 0 0 3px rgba(0,0,0,0.3); }

@@ -159,7 +159,7 @@ def load_data():
     df = pd.read_csv(CSV_FILE)
     
     # Drop columns
-    columns_to_drop = ['yield', 'prep_time', 'cook_time', 'total_time', 'timing', 'cuisine_path']
+    columns_to_drop = ['prep_time', 'cook_time', 'total_time', 'timing', 'cuisine_path']
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df = df.drop(columns=columns_to_drop, errors='ignore')
     df = df.dropna(subset=['recipe_name', 'ingredients'])
@@ -215,7 +215,9 @@ def search_recipes_by_tags(user_tags, dataframe):
                 'missing_tags': missing_tags,
                 'message': message,
                 'url': row.get('url', 'N/A'),
-                'img_src': row.get('img_src', '')
+                'img_src': row.get('img_src', ''),
+                'rating': row.get('rating', 0),
+                'servings': row.get('servings', row.get('yield', 'N/A'))
             })
     
     ranked_matches = sorted(matches, key=lambda x: x['total_ingredients_count'])

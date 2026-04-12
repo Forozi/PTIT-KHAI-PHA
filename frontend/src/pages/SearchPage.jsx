@@ -98,6 +98,36 @@ function SearchPage() {
         }
     };
 
+    // Helper to convert decimals to fractions
+    const formatIngredients = (ingList) => {
+        const decimalToFractionMap = {
+            "0.50": "1/2", "0.25": "1/4", "0.75": "3/4", "0.33": "1/3", "0.66": "2/3",
+            "0.20": "1/5", "0.40": "2/5", "0.60": "3/5", "0.80": "4/5",
+            "0.13": "1/8", "0.38": "3/8", "0.63": "5/8", "0.88": "7/8",
+            "0.17": "1/6", "0.83": "5/6"
+        };
+
+        return ingList.map(ing => {
+            return ing.replace(/\d+\.\d+/g, (match) => {
+                const num = parseFloat(match);
+                const whole = Math.floor(num);
+                const frac = (num - whole).toFixed(2);
+
+                if (decimalToFractionMap[frac]) {
+                    return whole > 0 ? `${whole} ${decimalToFractionMap[frac]}` : decimalToFractionMap[frac];
+                }
+                return match;
+            });
+        }).join(', ');
+    };
+
+    const getStarStyle = (rating) => {
+        if (!rating) return "";
+        if (rating < 3.5) return "star-brown";
+        if (rating < 4.5) return "star-silver";
+        return "star-gold";
+    };
+
     return (
         <div className="search-page">
             <h1>Ingredient-Based Recipe Finder</h1>
@@ -157,10 +187,16 @@ function SearchPage() {
                             <div className="recipe-card-text">
                                 <h3 className="recipe-title">{recipe.recipe_name}</h3>
                                 <div className="recipe-item-status" style={{ color: recipe.missing_tags.length === 0 ? "var(--moss-green)" : "var(--oxblood)" }}>
-                                    <strong>Status:</strong> {recipe.message}
+                                    <strong>Status: </strong> {recipe.message}
+                                </div>
+                                <div className="recipe-meta-data">
+                                    <strong>Rating: </strong> {recipe.rating || 'N/A'} / 5
+                                    <span className={`rating-star ${getStarStyle(recipe.rating)}`} style={{ marginLeft: '5px' }}>★</span>
+                                    <span style={{ margin: '0 10px' }}>|</span>
+                                    <strong>Servings: </strong> {recipe.servings || "N/A"}
                                 </div>
                                 <p className="recipe-ingredients-summary">
-                                    <strong>Available:</strong> {recipe.ingredients_full.filter(ing => !recipe.missing_tags.includes(ing)).join(', ')}
+                                    <strong>Full list: </strong> {formatIngredients(recipe.ingredients_full)}
                                 </p>
                             </div>
                         </div>

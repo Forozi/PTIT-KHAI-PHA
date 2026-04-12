@@ -64,11 +64,10 @@ function RecipePage() {
                 <div className="recipe-meta">
                     <h1 className="recipe-main-title">{recipe.recipe_name}</h1>
                     <p>
-
-                        <strong>Rating:</strong> {recipe.rating || 'N/A'} / 5
+                        <strong>Rating: </strong> {recipe.rating || 'N/A'} / 5
                         <span className={`rating-star ${getStarStyle(recipe.rating)}`}>★</span>
                     </p>
-                    <p><strong>Servings:</strong> {recipe.servings || 'N/A'}</p>
+                    <p><strong>Servings: </strong> {recipe.servings || 'N/A'}</p>
                     {recipe.url && (
                         <a href={recipe.url} target="_blank" rel="noopener noreferrer" className="source-link">
                             View Full Recipe Details

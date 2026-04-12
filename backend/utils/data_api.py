@@ -3,6 +3,24 @@ import json
 import pandas as pd
 from all import df, get_filtered_tags, get_recipe_by_id, search_recipes_by_tags
 
+def clean_recipe_data(data):
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if isinstance(value, (list, tuple, dict)):
+                clean_recipe_data(value)
+                continue
+            try:
+                if pd.isna(value):
+                    data[key] = None
+                elif hasattr(value, 'item'):
+                    data[key] = value.item()
+            except Exception:
+                pass
+    elif isinstance(data, list):
+        for item in data:
+            clean_recipe_data(item)
+    return data
+
 def handle_tags():
     common_tags = get_filtered_tags(df)
     print(json.dumps(common_tags))
@@ -17,17 +35,7 @@ def handle_recipe(recipe_id_str):
     result = get_recipe_by_id(recipe_id, df)
 
     if result:
-        # NaN to null(JSON)
-        for key, value in result.items():
-            if isinstance(value, (list, tuple, dict)):
-                continue
-            try:
-                if pd.isna(value):
-                    result[key] = None
-                elif hasattr(value, 'item'):
-                    result[key] = value.item()
-            except Exception:
-                pass
+        result = clean_recipe_data(result)
         
         print(json.dumps({
             "status": "success",
@@ -43,6 +51,7 @@ def handle_search(user_tags):
 
     # Run the search
     results = search_recipes_by_tags(user_tags, df)
+    results = clean_recipe_data(results)
 
     # Print JSON strictly to stdout so Node.js can read it
     sys.stdout.reconfigure(encoding='utf-8')
@@ -72,9 +81,12 @@ def handle_random(count_str):
             'missing_tags': [],
             'message': "A random inspiration just for you!",
             'url': row.get('url', 'N/A'),
-            'img_src': row.get('img_src', '')
+            'img_src': row.get('img_src', ''),
+            'rating': row.get('rating', 0),
+            'servings': row.get('servings', row.get('yield', 'N/A'))
         })
 
+    results = clean_recipe_data(results)
 
     sys.stdout.reconfigure(encoding='utf-8')
     print(json.dumps({
